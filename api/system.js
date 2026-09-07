@@ -1,7 +1,7 @@
 // api/system.js — 系统状态总览
-const { ok, fail, supabaseRest } = require('../lib/_shared.cjs')
+import { ok, fail, supabaseRest } from '../lib/_shared.cjs'
 
-module.exports = async function handler(req) {
+export default async function handler(req) {
   try {
     let vercel_status = 'unknown'
     let last_deploy = null

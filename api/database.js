@@ -1,7 +1,7 @@
 // api/database.js — 数据库监控
-const { ok, fail, supabaseRpc, supabaseRest, SUPABASE_KEY } = require('../lib/_shared.cjs')
+import { ok, fail, supabaseRpc, supabaseRest, SUPABASE_KEY } from '../lib/_shared.cjs'
 
-module.exports = async function handler(req) {
+export default async function handler(req) {
   try {
     let plants_count = 0
     let records_count = 0
@@ -9,7 +9,6 @@ module.exports = async function handler(req) {
     let last_record_time = null
     let db_size = 0
 
-    // 优先走 RPC 统计函数（SECURITY DEFINER 绕过 RLS）
     try {
       const stats = await supabaseRpc('admin_database_stats')
       if (stats) {
@@ -20,7 +19,6 @@ module.exports = async function handler(req) {
         db_size = stats.db_size || 0
       }
     } catch (e) {
-      // RPC 函数未创建时回退：用 service_role 直接查（仅当配置了 service_role）
       if (!SUPABASE_KEY) {
         return fail(new Error('请先在 Supabase SQL Editor 执行 supabase/admin_stats.sql 创建统计函数'))
       }

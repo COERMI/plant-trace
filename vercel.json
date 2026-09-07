@@ -1,8 +1,29 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
   "builds": [
     {
-      "src": "api/*.js",
+      "src": "api/auth.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/system.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/database.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/storage.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/users.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/logs.js",
       "use": "@vercel/node"
     },
     {
