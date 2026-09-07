@@ -1,5 +1,5 @@
 // api/storage.js — 存储监控
-import { ok, fail, supabaseRpc } from '../lib/_shared.cjs'
+import { ok, fail, supabaseRpc } from './lib/_shared.cjs'
 
 const STORAGE_LIMIT = 1073741824 // 1GB 免费版上限
 

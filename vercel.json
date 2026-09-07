@@ -1,44 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "builds": [
-    {
-      "src": "api/auth.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/system.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/database.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/storage.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/users.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/logs.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": ".vercel/output",
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
     {
       "source": "/((?!api/).*)",
       "destination": "/index.html"

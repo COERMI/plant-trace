@@ -1,5 +1,5 @@
 // api/database.js — 数据库监控
-import { ok, fail, supabaseRpc, supabaseRest, SUPABASE_KEY } from '../lib/_shared.cjs'
+import { ok, fail, supabaseRpc, supabaseRest, SUPABASE_KEY } from './lib/_shared.cjs'
 
 export default async function handler(req) {
   try {
