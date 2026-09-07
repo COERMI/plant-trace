@@ -66,6 +66,17 @@
           </span>
         </div>
         <p v-if="plant.notes" class="mt-sm whitespace-pre-wrap text-body text-neutral-body">{{ plant.notes }}</p>
+
+        <!-- 浇水提醒条 -->
+        <div
+          v-if="lastWater"
+          class="mt-md flex items-center gap-sm rounded-sm px-md py-sm text-caption"
+          :class="daysSinceWater >= 7 ? 'bg-[#FBEAE8] text-[#C0392B]' : 'bg-[#E8F2F9] text-[#5B9BD5]'"
+        >
+          <Icon :name="'droplets'" :size="16" :color="daysSinceWater >= 7 ? '#C0392B' : '#5B9BD5'" />
+          <span v-if="daysSinceWater >= 7">已 {{ daysSinceWater }} 天未浇水，该补充水分啦</span>
+          <span v-else>上次浇水 {{ daysSinceWater }} 天前</span>
+        </div>
       </div>
 
       <!-- 事件统计区 -->
@@ -86,12 +97,36 @@
       </div>
 
       <!-- 时间线标题 -->
-      <div class="mt-xl">
+      <div class="mt-xl flex items-center justify-between">
         <h2 class="text-h2 text-neutral-title">生长记录</h2>
+        <span v-if="records.length" class="text-caption text-neutral-placeholder">{{ records.length }} 条</span>
+      </div>
+
+      <!-- 事件类型筛选 -->
+      <div v-if="records.length" class="no-scrollbar -mx-base mt-sm flex gap-sm overflow-x-auto px-base pb-xs">
+        <button
+          type="button"
+          class="h-7 shrink-0 whitespace-nowrap rounded-sm px-md text-caption font-semibold transition-colors"
+          :class="recordFilter === '' ? 'bg-primary text-white' : 'bg-neutral-bg text-neutral-body'"
+          @click="recordFilter = ''"
+        >
+          全部
+        </button>
+        <button
+          v-for="s in stats"
+          :key="s.key"
+          type="button"
+          class="h-7 shrink-0 whitespace-nowrap rounded-sm px-md text-caption font-semibold transition-colors"
+          :class="recordFilter === s.key ? 'text-white' : 'bg-neutral-bg text-neutral-body'"
+          :style="recordFilter === s.key ? { backgroundColor: s.text } : {}"
+          @click="recordFilter = recordFilter === s.key ? '' : s.key"
+        >
+          {{ s.label }} {{ s.count }}
+        </button>
       </div>
 
       <!-- 时间线 -->
-      <div v-if="records.length" class="mt-base">
+      <div v-if="filteredRecords.length" class="mt-base">
         <div class="relative pl-lg">
           <!-- 轴线 -->
           <div class="absolute left-[5px] top-0 bottom-0 w-[2px] bg-neutral-border"></div>
@@ -99,7 +134,7 @@
           <!-- 记录列表 -->
           <div class="flex flex-col gap-base sm:gap-xl">
             <div
-              v-for="(record, i) in records"
+              v-for="(record, i) in filteredRecords"
               :key="record.id"
               class="relative"
             >
@@ -118,6 +153,11 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- 筛选无结果 -->
+      <div v-else-if="records.length" class="flex flex-col items-center py-xl text-center">
+        <p class="text-body-l text-neutral-secondary">该类型下暂无记录</p>
       </div>
 
       <!-- 空状态 -->
@@ -210,9 +250,16 @@ const showEditPlant = ref(false)
 const showAddRecord = ref(false)
 const editingRecord = ref(null)
 const pendingDeleteRecord = ref(null)
+const recordFilter = ref('')
 
 const plant = computed(() => plantStore.plants.find((p) => p.id === plantId) || null)
 const records = computed(() => recordStore.recordsByPlant[plantId] || [])
+
+// 按事件类型筛选后的记录
+const filteredRecords = computed(() => {
+  if (!recordFilter.value) return records.value
+  return records.value.filter((r) => r.event_type === recordFilter.value)
+})
 
 onMounted(async () => {
   if (!plantStore.loaded) await plantStore.fetchPlants()
@@ -246,6 +293,19 @@ const stats = computed(() => {
   return Object.entries(map)
     .map(([key, count]) => ({ key, count, ...getEventType(key) }))
     .sort((a, b) => b.count - a.count)
+})
+
+// 最近一次浇水记录
+const lastWater = computed(() => {
+  const water = records.value.filter((r) => r.event_type === 'water')
+  if (!water.length) return null
+  return water.reduce((a, b) => (new Date(a.record_date) > new Date(b.record_date) ? a : b))
+})
+
+// 距上次浇水天数
+const daysSinceWater = computed(() => {
+  if (!lastWater.value) return null
+  return Math.floor((Date.now() - new Date(lastWater.value.record_date).getTime()) / (1000 * 60 * 60 * 24))
 })
 
 async function onPlantSaved() {

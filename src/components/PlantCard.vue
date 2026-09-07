@@ -1,7 +1,8 @@
 <template>
   <router-link
     :to="`/plant/${plant.id}`"
-    class="group relative block overflow-hidden rounded-lg bg-white shadow-md transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]"
+    class="group fade-in-up relative block overflow-hidden rounded-lg bg-white shadow-md transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]"
+    :style="{ animationDelay: `${Math.min(index * 40, 400)}ms` }"
   >
     <!-- 封面图 4:3 -->
     <div class="relative aspect-[4/3] w-full overflow-hidden bg-neutral-bg">
@@ -58,6 +59,10 @@ defineProps({
   plant: {
     type: Object,
     required: true
+  },
+  index: {
+    type: Number,
+    default: 0
   }
 })
 
