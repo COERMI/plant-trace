@@ -1,9 +1,9 @@
 // api/storage.js — 存储监控
-import { ok, fail, supabaseRpc } from './_shared.js'
+const { ok, fail, supabaseRpc } = require('./_shared.js')
 
 const STORAGE_LIMIT = 1073741824 // 1GB 免费版上限
 
-export default async function handler(req) {
+module.exports = async function handler(req) {
   try {
     let bucket_name = 'plant-images'
     let files_count = 0

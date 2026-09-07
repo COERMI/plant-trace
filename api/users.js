@@ -1,7 +1,7 @@
 // api/users.js — 用户管理
-import { ok, fail, supabaseRpc } from './_shared.js'
+const { ok, fail, supabaseRpc } = require('./_shared.js')
 
-export default async function handler(req) {
+module.exports = async function handler(req) {
   try {
     let total_users = 0
     let active_today = 0
@@ -18,7 +18,6 @@ export default async function handler(req) {
       return fail(new Error('请先在 Supabase SQL Editor 执行 supabase/admin_stats.sql 创建统计函数'))
     }
 
-    // 邮箱脱敏：仅返回前段，避免泄露完整邮箱
     const safeRecent = recent_users.map((u) => ({
       email: maskEmail(u.email),
       created_at: u.created_at,
@@ -37,8 +36,10 @@ export default async function handler(req) {
 
 function maskEmail(email) {
   if (!email) return '未知'
-  const [name, domain] = email.split('@')
-  if (!domain) return email
+  const at = email.indexOf('@')
+  if (at < 0) return email
+  const name = email.slice(0, at)
+  const domain = email.slice(at)
   const visible = name.slice(0, Math.min(2, name.length))
-  return `${visible}***@${domain}`
+  return visible + '***' + domain
 }

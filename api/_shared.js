@@ -1,15 +1,18 @@
-// 服务端共享工具：仅供 api/*.js 使用，密钥从 process.env 读取，绝不暴露给浏览器
-// 注意：此文件不要被前端 import
+// api/_shared.js — 服务端共享工具（CommonJS，仅供 api/*.js 使用）
+// 密钥从 process.env 读取，绝不暴露给浏览器
 
-const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'https://lnlryoqmurfgxhjamndy.supabase.co'
+const SUPABASE_URL =
+  process.env.SUPABASE_URL ||
+  process.env.VITE_SUPABASE_URL ||
+  'https://lnlryoqmurfgxhjamndy.supabase.co'
 
-// 优先用 service_role（可绕过 RLS 直接查全量），没有则回退 anon + RPC 函数
+// 优先 service_role（绕过 RLS），否则回退 anon key（配合 RPC 统计函数）
 const SUPABASE_KEY =
   process.env.SUPABASE_SERVICE_ROLE_KEY ||
   process.env.VITE_SUPABASE_ANON_KEY ||
   ''
 
-// 极简 fetch 版 Supabase REST 调用（避免在 Serverless 里引入额外依赖）
+// 极简 fetch 版 Supabase REST 调用
 async function supabaseRest(path, opts = {}) {
   const url = `${SUPABASE_URL}/rest/v1/${path}`
   const res = await fetch(url, {
@@ -48,7 +51,6 @@ async function supabaseRpc(fnName, args = {}) {
   return res.json()
 }
 
-// 统一 JSON 响应
 function json(status, data) {
   return new Response(JSON.stringify(data), {
     status,
@@ -64,7 +66,7 @@ function ok(data) {
 }
 
 function fail(err) {
-  return json(200, { error: err?.message || String(err) })
+  return json(200, { error: err && err.message ? err.message : String(err) })
 }
 
-export { SUPABASE_URL, SUPABASE_KEY, supabaseRest, supabaseRpc, json, ok, fail }
+module.exports = { SUPABASE_URL, SUPABASE_KEY, supabaseRest, supabaseRpc, json, ok, fail }
