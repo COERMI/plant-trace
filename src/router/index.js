@@ -25,6 +25,21 @@ const routes = [
     component: () => import('../views/Login.vue')
   },
   {
+    path: '/admin/login',
+    name: 'admin-login',
+    component: () => import('../views/admin/AdminLogin.vue')
+  },
+  {
+    path: '/admin/dashboard',
+    name: 'admin-dashboard',
+    component: () => import('../views/admin/AdminDashboard.vue'),
+    meta: { requiresAdmin: true }
+  },
+  {
+    path: '/admin',
+    redirect: '/admin/login'
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/'
   }
@@ -37,6 +52,14 @@ const router = createRouter({
     if (savedPosition) return savedPosition
     return { top: 0 }
   }
+})
+
+// 后台路由守卫：基于 sessionStorage 的独立登录态
+router.beforeEach((to) => {
+  if (to.meta.requiresAdmin && !sessionStorage.getItem('planttrace_admin')) {
+    return { name: 'admin-login' }
+  }
+  return true
 })
 
 export default router

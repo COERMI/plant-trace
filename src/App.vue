@@ -20,6 +20,15 @@ const route = useRoute()
 
 // 应用启动时恢复会话，并根据登录状态决定是否跳转
 onMounted(async () => {
+  // 后台路由使用独立 sessionStorage 登录态，不走 Supabase 会话逻辑
+  const isAdminRoute = route.path.startsWith('/admin')
+  if (isAdminRoute) {
+    if (route.meta.requiresAdmin && !sessionStorage.getItem('planttrace_admin')) {
+      router.replace('/admin/login')
+    }
+    return
+  }
+
   await userStore.restoreSession()
   if (route.meta.requiresAuth && !userStore.user) {
     router.replace('/login')
