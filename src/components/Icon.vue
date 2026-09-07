@@ -82,6 +82,53 @@
       <line x1="16" x2="8" y1="17" y2="17" />
       <line x1="10" x2="8" y1="9" y2="9" />
     </g>
+    <!-- 统计 bar-chart-2 -->
+    <g v-else-if="name === 'bar-chart-2'">
+      <line x1="18" x2="18" y1="20" y2="10" />
+      <line x1="12" x2="12" y1="20" y2="4" />
+      <line x1="6" x2="6" y1="20" y2="14" />
+    </g>
+    <!-- 管理/多选 check-square -->
+    <g v-else-if="name === 'check-square'">
+      <polyline points="9 11 12 14 22 4" />
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+    </g>
+    <!-- 导出 download -->
+    <g v-else-if="name === 'download'">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" x2="12" y1="15" y2="3" />
+    </g>
+    <!-- 日历 calendar -->
+    <g v-else-if="name === 'calendar'">
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <line x1="16" x2="16" y1="2" y2="6" />
+      <line x1="8" x2="8" y1="2" y2="6" />
+      <line x1="3" x2="21" y1="10" y2="10" />
+    </g>
+    <!-- 太阳/健康 sun -->
+    <g v-else-if="name === 'sun'">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </g>
+    <!-- 向左 chevron-left -->
+    <g v-else-if="name === 'chevron-left'">
+      <polyline points="15 18 9 12 15 6" />
+    </g>
+    <!-- 向右 chevron-right -->
+    <g v-else-if="name === 'chevron-right'">
+      <polyline points="9 18 15 12 9 6" />
+    </g>
+    <!-- 关闭 x -->
+    <g v-else-if="name === 'x'">
+      <line x1="18" x2="6" y1="6" y2="18" />
+      <line x1="6" x2="18" y1="6" y2="18" />
+    </g>
+    <!-- 相机 camera -->
+    <g v-else-if="name === 'camera'">
+      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+      <circle cx="12" cy="13" r="3" />
+    </g>
     <!-- 默认 fallback -->
     <circle v-else cx="12" cy="12" r="10" />
   </svg>

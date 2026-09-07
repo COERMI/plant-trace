@@ -18,9 +18,24 @@
               </svg>
             </div>
             <span class="text-h3 text-neutral-title">植迹</span>
+            <!-- 电脑端导航 -->
+            <div class="ml-lg hidden items-center gap-xs sm:flex">
+              <router-link
+                to="/"
+                class="rounded-sm px-md py-xs text-body font-semibold text-primary"
+              >
+                首页
+              </router-link>
+              <router-link
+                to="/stats"
+                class="rounded-sm px-md py-xs text-body font-semibold text-neutral-secondary transition-colors hover:bg-neutral-bg"
+              >
+                统计
+              </router-link>
+            </div>
           </div>
 
-          <!-- 提醒 + 退出登录 -->
+          <!-- 提醒 + 管理 + 退出登录 -->
           <div class="flex items-center gap-xs">
             <button
               class="relative flex h-9 w-9 items-center justify-center rounded-sm text-neutral-secondary transition-colors hover:bg-neutral-bg"
@@ -35,6 +50,16 @@
                 v-if="duePlants.length"
                 class="absolute right-xs top-xs h-2 w-2 rounded-full bg-red-500"
               ></span>
+            </button>
+            <button
+              class="flex h-9 items-center gap-xs rounded-sm px-md text-body font-semibold transition-colors"
+              :class="manageMode ? 'bg-primary text-white' : 'text-neutral-secondary hover:bg-neutral-bg'"
+              @click="toggleManageMode"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+              {{ manageMode ? '完成' : '管理' }}
             </button>
             <button
               class="flex h-9 items-center gap-xs rounded-sm px-md text-body font-semibold text-neutral-secondary transition-colors hover:bg-neutral-bg"
@@ -107,7 +132,7 @@
     </header>
 
     <!-- 主体 -->
-    <main class="mx-auto max-w-[1200px] px-base pb-[80px] sm:px-lg">
+    <main class="mx-auto max-w-[1200px] px-base pb-[120px] sm:px-lg sm:pb-[80px]">
       <!-- 加载中（骨架屏） -->
       <div v-if="plantStore.loading" class="grid grid-cols-2 gap-md sm:grid-cols-3 sm:gap-base lg:grid-cols-4">
         <PlantCardSkeleton v-for="n in 8" :key="n" />
@@ -143,7 +168,11 @@
           :key="plant.id"
           :plant="plant"
           :index="i"
+          :selectable="manageMode"
+          :is-selected="selectedIds.has(plant.id)"
+          :last-record-at="lastRecordMap[plant.id]"
           @delete="requestDeletePlant(plant)"
+          @toggle-select="toggleSelect(plant)"
         />
       </div>
 
@@ -159,9 +188,10 @@
       </div>
     </main>
 
-    <!-- 悬浮新增按钮（safe-area 避让手势条） -->
+    <!-- 悬浮新增按钮（safe-area 避让手势条，管理模式下隐藏） -->
     <button
-      class="fixed bottom-[calc(24px+env(safe-area-inset-bottom))] right-base z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-105 hover:shadow-xl active:scale-95 sm:right-lg"
+      v-if="!manageMode"
+      class="fixed bottom-[calc(72px+env(safe-area-inset-bottom))] right-base z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-105 hover:shadow-xl active:scale-95 sm:right-lg"
       aria-label="新增植物"
       @click="showPlantForm = true"
     >
@@ -170,8 +200,112 @@
       </svg>
     </button>
 
+    <!-- 批量操作栏（管理模式） -->
+    <div
+      v-if="manageMode"
+      class="fixed bottom-[calc(56px+env(safe-area-inset-bottom))] left-0 right-0 z-40 border-t border-neutral-border bg-white px-base py-sm shadow-[0_-4px_16px_rgba(0,0,0,0.06)]"
+    >
+      <div class="mx-auto flex max-w-[1200px] items-center justify-between">
+        <span class="text-body font-semibold text-neutral-title">已选 {{ selectedCount }} 株</span>
+        <div class="flex gap-sm">
+          <button
+            class="h-10 rounded-md border border-neutral-border bg-white px-base text-body font-semibold text-neutral-body transition-colors hover:bg-neutral-bg"
+            @click="openBatchCategory"
+          >
+            修改品类
+          </button>
+          <button
+            class="h-10 rounded-md bg-danger px-base text-body font-semibold text-white transition-colors hover:bg-red-700"
+            @click="requestBatchDelete"
+          >
+            批量删除
+          </button>
+          <button
+            class="h-10 rounded-md bg-neutral-bg px-base text-body font-semibold text-neutral-body transition-colors hover:bg-neutral-border"
+            @click="toggleManageMode"
+          >
+            取消
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部导航栏（手机端固定底部） -->
+    <nav
+      class="fixed bottom-0 left-0 right-0 z-40 border-t border-neutral-border bg-white/95 backdrop-blur sm:hidden"
+      style="padding-bottom: env(safe-area-inset-bottom)"
+    >
+      <div class="flex h-14 items-center">
+        <router-link
+          to="/"
+          class="flex flex-1 flex-col items-center justify-center gap-[2px] text-primary"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            <polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="text-[11px] font-semibold">首页</span>
+        </router-link>
+        <router-link
+          to="/stats"
+          class="flex flex-1 flex-col items-center justify-center gap-[2px] text-neutral-secondary"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <line x1="18" x2="18" y1="20" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="12" x2="12" y1="20" y2="4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="6" x2="6" y1="20" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+          <span class="text-[11px] font-semibold">统计</span>
+        </router-link>
+      </div>
+    </nav>
+
     <!-- 新增植物面板 -->
     <PlantForm v-if="showPlantForm" @close="showPlantForm = false" @saved="onSaved" />
+
+    <!-- 批量改品类弹窗 -->
+    <div
+      v-if="showBatchCategory"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      @click.self="showBatchCategory = false"
+    >
+      <div class="modal-in w-[320px] rounded-lg bg-white p-lg shadow-xl">
+        <h3 class="text-h3 text-neutral-title">批量修改品类</h3>
+        <p class="mt-xs text-caption text-neutral-secondary">将为选中的 {{ selectedCount }} 株植物设置新品类</p>
+        <input
+          v-model="batchCategoryInput"
+          type="text"
+          placeholder="输入品类名称，如：月季"
+          class="mt-md h-11 w-full rounded-md border border-neutral-border bg-white px-base text-body text-neutral-title placeholder:text-neutral-placeholder focus:border-primary focus:outline-none"
+          @keyup.enter="confirmBatchCategory"
+        />
+        <div class="mt-lg flex gap-md">
+          <button
+            class="h-11 flex-1 rounded-md border border-neutral-border bg-white text-body font-semibold text-neutral-body hover:bg-neutral-bg"
+            @click="showBatchCategory = false"
+          >
+            取消
+          </button>
+          <button
+            class="h-11 flex-1 rounded-md bg-primary text-body font-semibold text-white hover:bg-primary-hover"
+            @click="confirmBatchCategory"
+          >
+            确定
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 批量删除确认弹窗 -->
+    <ConfirmDialog
+      v-if="pendingBatchDelete"
+      title="批量删除"
+      :message="`确定要删除选中的 ${selectedCount} 株植物吗？\n其所有生长记录也会一并删除，此操作不可恢复。`"
+      confirm-text="删除"
+      danger
+      @confirm="confirmBatchDelete"
+      @cancel="pendingBatchDelete = false"
+    />
 
     <!-- 删除确认弹窗 -->
     <ConfirmDialog
@@ -210,6 +344,13 @@ const activeCategory = ref('')
 const showPlantForm = ref(false)
 const pendingDelete = ref(null)
 
+// ===== 批量管理 =====
+const manageMode = ref(false) // 是否处于多选模式
+const selectedIds = ref(new Set()) // 选中的植物 id 集合
+const showBatchCategory = ref(false) // 批量改品类弹窗
+const batchCategoryInput = ref('') // 批量改品类的输入值
+const pendingBatchDelete = ref(false) // 批量删除确认
+
 // 搜索防抖：输入停止 200ms 后才真正更新过滤关键词
 const debouncedQuery = ref('')
 let searchTimer = null
@@ -239,8 +380,9 @@ onBeforeUnmount(() => {
   loadMoreObserver && loadMoreObserver.disconnect()
 })
 
-// ===== 浇水提醒 =====
+// ===== 浇水提醒 + 最近记录 =====
 const lastWaterMap = ref({}) // plantId -> 上次浇水日期
+const lastRecordMap = ref({}) // plantId -> 最近任意记录日期
 const duePlants = computed(() => {
   const list = []
   plantStore.plants.forEach((p) => {
@@ -256,17 +398,24 @@ const duePlants = computed(() => {
 async function loadReminders() {
   if (!plantStore.plants.length) return
   try {
+    // 一次查询所有记录，同时构建"最近浇水"和"最近记录"两个 map
     const { data, error } = await supabase
       .from('records')
-      .select('plant_id, record_date')
-      .eq('event_type', 'water')
+      .select('plant_id, record_date, event_type')
       .order('record_date', { ascending: false })
     if (error) return
-    const map = {}
+    const waterMap = {}
+    const recordMap = {}
     ;(data || []).forEach((r) => {
-      if (!map[r.plant_id]) map[r.plant_id] = r.record_date
+      if (r.event_type === 'water' && !waterMap[r.plant_id]) {
+        waterMap[r.plant_id] = r.record_date
+      }
+      if (!recordMap[r.plant_id]) {
+        recordMap[r.plant_id] = r.record_date
+      }
     })
-    lastWaterMap.value = map
+    lastWaterMap.value = waterMap
+    lastRecordMap.value = recordMap
   } catch (e) {
     // 静默失败，不影响主流程
   }
@@ -364,5 +513,79 @@ async function confirmDeletePlant() {
 async function handleSignOut() {
   await userStore.signOut()
   router.replace('/login')
+}
+
+// ===== 批量管理 =====
+const selectedCount = computed(() => selectedIds.value.size)
+
+function toggleManageMode() {
+  manageMode.value = !manageMode.value
+  if (!manageMode.value) {
+    selectedIds.value = new Set()
+    showBatchCategory.value = false
+  }
+}
+
+function toggleSelect(plant) {
+  const s = new Set(selectedIds.value)
+  if (s.has(plant.id)) {
+    s.delete(plant.id)
+  } else {
+    s.add(plant.id)
+  }
+  selectedIds.value = s
+}
+
+function openBatchCategory() {
+  if (!selectedCount.value) {
+    toast.info('请先选择植物')
+    return
+  }
+  batchCategoryInput.value = ''
+  showBatchCategory.value = true
+}
+
+async function confirmBatchCategory() {
+  const cat = batchCategoryInput.value.trim()
+  if (!cat) {
+    toast.error('请输入品类名称')
+    return
+  }
+  showBatchCategory.value = false
+  try {
+    const ids = [...selectedIds.value]
+    const plants = plantStore.plants.filter((p) => ids.includes(p.id))
+    // 逐个更新品类
+    for (const p of plants) {
+      await plantStore.updatePlant(p.id, { ...p, category: cat })
+    }
+    toast.success(`已更新 ${ids.length} 株植物的品类为「${cat}」`)
+    // 退出管理模式
+    toggleManageMode()
+  } catch (e) {
+    toast.error('更新失败：' + (e.message || '未知错误'))
+  }
+}
+
+function requestBatchDelete() {
+  if (!selectedCount.value) {
+    toast.info('请先选择植物')
+    return
+  }
+  pendingBatchDelete.value = true
+}
+
+async function confirmBatchDelete() {
+  pendingBatchDelete.value = false
+  const ids = [...selectedIds.value]
+  try {
+    for (const id of ids) {
+      await plantStore.deletePlant(id)
+    }
+    toast.success(`已删除 ${ids.length} 株植物`)
+    toggleManageMode()
+  } catch (e) {
+    toast.error('删除失败：' + (e.message || '未知错误'))
+  }
 }
 </script>
