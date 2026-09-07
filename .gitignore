@@ -7,3 +7,6 @@ dist
 .env.*
 !.env.example
 .workbuddy/
+
+# Vite 临时配置文件
+vite.config.js.timestamp-*.mjs
