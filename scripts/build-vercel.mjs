@@ -46,8 +46,8 @@ for (const file of apiFiles) {
   // 复制函数文件
   copyFileSync(join(apiDir, file), join(funcDir, 'index.js'))
 
-  // 生成 package.json（声明 CommonJS，避免被根目录 type:module 干扰）
-  writeFileSync(join(funcDir, 'package.json'), JSON.stringify({ type: 'commonjs' }, null, 2))
+  // 生成 package.json（声明 ESM，配合 runtime nodejs22.x）
+  writeFileSync(join(funcDir, 'package.json'), JSON.stringify({ type: 'module' }, null, 2))
 
   // 复制共享代码
   const libDir = join(root, 'lib')
@@ -61,7 +61,7 @@ for (const file of apiFiles) {
 
   // 生成 .vc-config.json（函数配置）
   writeFileSync(join(funcDir, '.vc-config.json'), JSON.stringify({
-    runtime: 'nodejs20.x',
+    runtime: 'nodejs22.x',
     handler: 'index.js',
     launcherType: 'Nodejs',
     shouldAddHelpers: true,
