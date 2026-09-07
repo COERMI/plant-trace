@@ -1,6 +1,6 @@
 <template>
-  <!-- 纯 SVG 饼图 -->
-  <div class="flex items-center justify-center">
+  <!-- 纯 SVG 饼图（固定尺寸，不溢出） -->
+  <div class="flex items-center justify-center overflow-hidden" :style="{ height: height + 'px' }">
     <svg :width="height" :height="height" viewBox="0 0 100 100">
       <!-- 无数据时画一个灰色圆环 -->
       <circle

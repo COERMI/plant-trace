@@ -1,132 +1,129 @@
 <template>
-  <div class="admin-dashboard min-h-screen bg-[#f5f7f5] text-gray-800">
+  <div class="admin-dashboard min-h-screen bg-neutral-bg text-neutral-body">
     <!-- 顶部导航栏 -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-[#4A7C59] text-white">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <header class="sticky top-0 z-10 border-b border-neutral-border bg-white/95 backdrop-blur">
+      <div class="mx-auto flex max-w-[1200px] items-center justify-between px-base py-base sm:px-lg">
+        <div class="flex items-center gap-sm">
+          <div class="inline-flex h-9 w-9 items-center justify-center rounded-md bg-primary text-white">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
           </div>
           <div>
-            <h1 class="text-base font-bold leading-tight">管理员后台</h1>
-            <p class="text-xs text-gray-400">植迹 PlantTrace</p>
+            <h1 class="text-h3 leading-tight text-neutral-title">管理员后台</h1>
+            <p class="text-caption text-neutral-secondary">植迹 PlantTrace</p>
           </div>
         </div>
 
-        <div class="flex items-center gap-2 sm:gap-3">
-          <span class="text-xs text-gray-400 hidden sm:inline">最后刷新：{{ lastRefresh }}</span>
+        <div class="flex items-center gap-sm sm:gap-md">
+          <span class="hidden text-caption text-neutral-secondary sm:inline">最后刷新：{{ lastRefresh }}</span>
           <button
             @click="refreshAll"
             :disabled="loading"
-            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition disabled:opacity-50"
+            class="flex h-9 items-center gap-xs rounded-md border border-neutral-border bg-white px-md text-body font-semibold text-neutral-body transition-colors hover:bg-neutral-bg disabled:opacity-50"
           >
-            <svg class="w-4 h-4" :class="{ 'animate-spin': loading }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
+            <svg class="h-4 w-4" :class="{ 'animate-spin': loading }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
             刷新
           </button>
           <button
             @click="logout"
-            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition"
+            class="flex h-9 items-center gap-xs rounded-md border border-neutral-border bg-white px-md text-body font-semibold text-neutral-body transition-colors hover:bg-neutral-bg"
           >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             退出
           </button>
         </div>
       </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <main class="mx-auto max-w-[1200px] space-y-lg px-base py-lg sm:px-lg">
       <!-- 全局错误提示 -->
-      <div v-if="globalError" class="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600 flex items-center gap-2">
-        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div v-if="globalError" class="flex items-center gap-sm rounded-md border border-danger/20 bg-danger/5 px-base py-md text-body text-danger">
+        <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         {{ globalError }}
       </div>
 
       <!-- 第一行：4 个状态卡片 -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 gap-base sm:grid-cols-2 lg:grid-cols-4">
         <StatusCard v-if="system" :loading="loading" title="网站状态" :icon="'globe'">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-sm">
             <span class="dot" :class="statusColor(system.vercel_status === 'online' ? 'ok' : 'err')"></span>
-            <span class="text-lg font-bold">{{ system.vercel_status === 'online' ? '在线' : '离线' }}</span>
+            <span class="text-h2">{{ system.vercel_status === 'online' ? '在线' : '离线' }}</span>
           </div>
-          <p class="text-xs text-gray-400 mt-1">最后部署：{{ fmt(system.last_deploy) || '—' }}</p>
+          <p class="mt-xs text-caption text-neutral-secondary">最后部署：{{ fmt(system.last_deploy) || '—' }}</p>
         </StatusCard>
 
         <StatusCard v-if="system" :loading="loading" title="数据库" :icon="'db'">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-sm">
             <span class="dot" :class="statusColor(system.db_status === 'ok' ? 'ok' : 'err')"></span>
-            <span class="text-lg font-bold">{{ system.db_status === 'ok' ? '正常' : '异常' }}</span>
+            <span class="text-h2">{{ system.db_status === 'ok' ? '正常' : '异常' }}</span>
           </div>
-          <p class="text-xs text-gray-400 mt-1">已用 {{ dbData ? bytes(dbData.db_size) : '—' }} / 500MB</p>
+          <p class="mt-xs text-caption text-neutral-secondary">已用 {{ dbData ? bytes(dbData.db_size) : '—' }} / 500MB</p>
         </StatusCard>
 
         <StatusCard v-if="storage" :loading="loading" title="存储" :icon="'hard-drive'">
-          <div class="flex items-center gap-2">
-            <span class="dot" :class="statusColor(storage.files_count >= 0 ? 'ok' : 'err')"></span>
-            <span class="text-lg font-bold">{{ storage.files_count }} 文件</span>
+          <div class="flex items-center gap-sm">
+            <span class="dot" :class="statusColor('ok')"></span>
+            <span class="text-h2">{{ storage.files_count }} 文件</span>
           </div>
-          <p class="text-xs text-gray-400 mt-1">已用 {{ bytes(storage.storage_used) }} / 1GB</p>
+          <p class="mt-xs text-caption text-neutral-secondary">已用 {{ bytes(storage.storage_used) }} / 1GB</p>
         </StatusCard>
 
         <StatusCard v-if="users" :loading="loading" title="用户" :icon="'users'">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-sm">
             <span class="dot" :class="statusColor('ok')"></span>
-            <span class="text-lg font-bold">{{ users.total_users }} 人</span>
+            <span class="text-h2">{{ users.total_users }} 人</span>
           </div>
-          <p class="text-xs text-gray-400 mt-1">今日活跃 {{ users.active_today }} 人</p>
+          <p class="mt-xs text-caption text-neutral-secondary">今日活跃 {{ users.active_today }} 人</p>
         </StatusCard>
       </div>
 
       <!-- 第二行：数据量统计 + 存储用量 -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- 数据量统计 -->
-        <div class="card bg-white rounded-2xl p-6">
-          <h3 class="text-sm font-semibold text-gray-700 mb-4">数据量统计</h3>
-          <div v-if="dbData" class="flex items-end gap-8 h-40">
-            <div class="flex flex-col items-center flex-1">
-              <span class="text-2xl font-bold text-[#4A7C59]">{{ dbData.plants_count }}</span>
-              <div class="w-full max-w-[80px] rounded-t-lg mt-2" :style="barStyle(dbData.plants_count, dbData.records_count)"></div>
-              <span class="text-xs text-gray-400 mt-2">植物</span>
-            </div>
-            <div class="flex flex-col items-center flex-1">
-              <span class="text-2xl font-bold text-[#4A7C59]">{{ dbData.records_count }}</span>
-              <div class="w-full max-w-[80px] rounded-t-lg mt-2" :style="barStyle(dbData.records_count, dbData.records_count)"></div>
-              <span class="text-xs text-gray-400 mt-2">生长记录</span>
-            </div>
-            <div class="flex flex-col items-center flex-1">
-              <span class="text-2xl font-bold text-[#4A7C59]">{{ dbData.users_count }}</span>
-              <div class="w-full max-w-[80px] rounded-t-lg mt-2" :style="barStyle(dbData.users_count, Math.max(dbData.records_count, 1))"></div>
-              <span class="text-xs text-gray-400 mt-2">用户</span>
+      <div class="grid grid-cols-1 gap-base lg:grid-cols-2">
+        <!-- 数据量统计（固定高度柱状图） -->
+        <div class="rounded-lg bg-white p-base shadow-md">
+          <h3 class="mb-md text-h3 text-neutral-title">数据量统计</h3>
+          <div v-if="dbData" class="flex h-[250px] items-end justify-around gap-md overflow-hidden">
+            <div
+              v-for="item in dbChartData"
+              :key="item.label"
+              class="flex h-full flex-1 flex-col items-center justify-end"
+            >
+              <span class="mb-xs text-h2 text-primary">{{ item.value }}</span>
+              <div
+                class="w-full max-w-[80px] rounded-t-md transition-all duration-500"
+                :style="{ height: item.height + '%', background: item.color }"
+              ></div>
+              <span class="mt-sm text-caption text-neutral-secondary">{{ item.label }}</span>
             </div>
           </div>
           <Skeleton v-else :rows="3" />
         </div>
 
         <!-- 存储用量进度条 -->
-        <div class="card bg-white rounded-2xl p-6">
-          <h3 class="text-sm font-semibold text-gray-700 mb-4">存储用量</h3>
+        <div class="rounded-lg bg-white p-base shadow-md">
+          <h3 class="mb-md text-h3 text-neutral-title">存储用量</h3>
           <div v-if="storage">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-sm text-gray-500">已用 {{ bytes(storage.storage_used) }}</span>
-              <span class="text-sm font-semibold" :class="progressTextClass(storagePercent)">
+            <div class="mb-sm flex items-center justify-between">
+              <span class="text-body text-neutral-body">已用 {{ bytes(storage.storage_used) }}</span>
+              <span class="text-body font-semibold" :class="progressTextClass(storagePercent)">
                 {{ storagePercent.toFixed(2) }}%
               </span>
             </div>
-            <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-3 overflow-hidden rounded-full bg-neutral-bg">
               <div class="h-full rounded-full transition-all duration-500" :class="progressBarClass(storagePercent)" :style="{ width: Math.min(storagePercent, 100) + '%' }"></div>
             </div>
-            <p class="text-xs text-gray-400 mt-2">总量 {{ bytes(storage.storage_limit) }}（Vercel 免费版 1GB 上限）</p>
+            <p class="mt-sm text-caption text-neutral-secondary">总量 {{ bytes(storage.storage_limit) }}（Vercel 免费版 1GB 上限）</p>
 
             <!-- 最大文件 -->
-            <div class="mt-5">
-              <p class="text-xs font-medium text-gray-500 mb-2">最大的 5 个文件</p>
-              <ul class="space-y-1.5">
-                <li v-for="(f, i) in storage.largest_files" :key="i" class="flex items-center justify-between text-xs text-gray-600">
-                  <span class="truncate mr-3" :title="f.name">{{ f.name }}</span>
-                  <span class="shrink-0 text-gray-400">{{ bytes(f.size) }}</span>
+            <div class="mt-lg">
+              <p class="mb-sm text-caption font-medium text-neutral-secondary">最大的 5 个文件</p>
+              <ul class="space-y-xs">
+                <li v-for="(f, i) in storage.largest_files" :key="i" class="flex items-center justify-between text-caption text-neutral-body">
+                  <span class="truncate mr-md" :title="f.name">{{ f.name }}</span>
+                  <span class="shrink-0 text-neutral-secondary">{{ bytes(f.size) }}</span>
                 </li>
-                <li v-if="!storage.largest_files?.length" class="text-xs text-gray-400">暂无文件</li>
+                <li v-if="!storage.largest_files?.length" class="text-caption text-neutral-placeholder">暂无文件</li>
               </ul>
             </div>
           </div>
@@ -135,43 +132,43 @@
       </div>
 
       <!-- 第三行：最近注册用户 + 最近活动 -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 gap-base lg:grid-cols-2">
         <!-- 最近注册用户 -->
-        <div class="card bg-white rounded-2xl p-6">
-          <h3 class="text-sm font-semibold text-gray-700 mb-4">最近注册用户</h3>
+        <div class="rounded-lg bg-white p-base shadow-md">
+          <h3 class="mb-md text-h3 text-neutral-title">最近注册用户</h3>
           <div v-if="users">
-            <ul class="divide-y divide-gray-100">
-              <li v-for="(u, i) in users.recent_users" :key="i" class="py-3 flex items-center justify-between">
-                <div class="flex items-center gap-3 min-w-0">
-                  <div class="w-8 h-8 rounded-full bg-[#E8F0EB] text-[#4A7C59] flex items-center justify-center text-xs font-semibold shrink-0">
+            <ul class="divide-y divide-neutral-border">
+              <li v-for="(u, i) in users.recent_users" :key="i" class="flex items-center justify-between py-md">
+                <div class="flex min-w-0 items-center gap-md">
+                  <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-caption font-semibold text-primary">
                     {{ (u.email || '?').charAt(0).toUpperCase() }}
                   </div>
                   <div class="min-w-0">
-                    <p class="text-sm text-gray-700 truncate">{{ u.email }}</p>
-                    <p class="text-xs text-gray-400">{{ fmt(u.created_at) }}</p>
+                    <p class="truncate text-body text-neutral-title">{{ u.email }}</p>
+                    <p class="text-caption text-neutral-secondary">{{ fmt(u.created_at) }}</p>
                   </div>
                 </div>
-                <span class="text-xs text-gray-500 shrink-0">{{ u.plants_count }} 株</span>
+                <span class="shrink-0 text-caption text-neutral-secondary">{{ u.plants_count }} 株</span>
               </li>
-              <li v-if="!users.recent_users?.length" class="py-3 text-xs text-gray-400">暂无用户</li>
+              <li v-if="!users.recent_users?.length" class="py-md text-caption text-neutral-placeholder">暂无用户</li>
             </ul>
           </div>
           <Skeleton v-else :rows="3" />
         </div>
 
         <!-- 最近活动 -->
-        <div class="card bg-white rounded-2xl p-6">
-          <h3 class="text-sm font-semibold text-gray-700 mb-4">最近活动记录</h3>
+        <div class="rounded-lg bg-white p-base shadow-md">
+          <h3 class="mb-md text-h3 text-neutral-title">最近活动记录</h3>
           <div v-if="logs">
-            <ul class="divide-y divide-gray-100">
-              <li v-for="(a, i) in logs.recent_activities" :key="i" class="py-3 flex items-center gap-3">
-                <span class="w-2 h-2 rounded-full shrink-0" :style="{ background: eventColor(a.event_type) }"></span>
+            <ul class="divide-y divide-neutral-border">
+              <li v-for="(a, i) in logs.recent_activities" :key="i" class="flex items-center gap-md py-md">
+                <span class="h-2 w-2 shrink-0 rounded-full" :style="{ background: eventColor(a.event_type) }"></span>
                 <div class="min-w-0 flex-1">
-                  <p class="text-sm text-gray-700 truncate">{{ a.plant_name }} · {{ eventLabel(a.event_type) }}</p>
-                  <p class="text-xs text-gray-400">{{ fmt(a.record_date) }}</p>
+                  <p class="truncate text-body text-neutral-title">{{ a.plant_name }} · {{ eventLabel(a.event_type) }}</p>
+                  <p class="text-caption text-neutral-secondary">{{ fmt(a.record_date) }}</p>
                 </div>
               </li>
-              <li v-if="!logs.recent_activities?.length" class="py-3 text-xs text-gray-400">暂无活动</li>
+              <li v-if="!logs.recent_activities?.length" class="py-md text-caption text-neutral-placeholder">暂无活动</li>
             </ul>
           </div>
           <Skeleton v-else :rows="3" />
@@ -179,28 +176,28 @@
       </div>
 
       <!-- 底部：系统信息 -->
-      <div class="card bg-white rounded-2xl p-6">
-        <h3 class="text-sm font-semibold text-gray-700 mb-4">系统信息</h3>
-        <div v-if="system" class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+      <div class="rounded-lg bg-white p-base shadow-md">
+        <h3 class="mb-md text-h3 text-neutral-title">系统信息</h3>
+        <div v-if="system" class="grid grid-cols-2 gap-base text-body sm:grid-cols-4">
           <div>
-            <p class="text-xs text-gray-400">项目名</p>
-            <p class="text-gray-700 mt-0.5">{{ system.project_name || '—' }}</p>
+            <p class="text-caption text-neutral-secondary">项目名</p>
+            <p class="mt-xs text-neutral-title">{{ system.project_name || '—' }}</p>
           </div>
           <div>
-            <p class="text-xs text-gray-400">部署地区</p>
-            <p class="text-gray-700 mt-0.5">{{ system.deploy_region || '—' }}</p>
+            <p class="text-caption text-neutral-secondary">部署地区</p>
+            <p class="mt-xs text-neutral-title">{{ system.deploy_region || '—' }}</p>
           </div>
           <div>
-            <p class="text-xs text-gray-400">服务器时间</p>
-            <p class="text-gray-700 mt-0.5">{{ fmt(system.current_time) }}</p>
+            <p class="text-caption text-neutral-secondary">服务器时间</p>
+            <p class="mt-xs text-neutral-title">{{ fmt(system.current_time) }}</p>
           </div>
           <div>
-            <p class="text-xs text-gray-400">数据库时间</p>
-            <p class="text-gray-700 mt-0.5">{{ dbData ? fmt(dbData.last_record_time) : '—' }}</p>
+            <p class="text-caption text-neutral-secondary">数据库时间</p>
+            <p class="mt-xs text-neutral-title">{{ dbData ? fmt(dbData.last_record_time) : '—' }}</p>
           </div>
         </div>
         <Skeleton v-else :rows="2" />
-        <p class="text-xs text-gray-400 mt-5 leading-relaxed">
+        <p class="mt-lg text-caption leading-relaxed text-neutral-secondary">
           说明：本站运行于 Vercel Hobby 免费版（数据库 500MB / 存储 1GB 上限），数据存储于 Supabase 免费版。{{ logs?.note || '' }}
         </p>
       </div>
@@ -211,6 +208,9 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import StatusCard from '../../components/admin/StatusCard.vue'
+import Skeleton from '../../components/admin/Skeleton.vue'
+import { setPageTitle } from '../../utils/title'
 
 const router = useRouter()
 
@@ -246,6 +246,23 @@ const storagePercent = computed(() => {
   return (storage.value.storage_used / storage.value.storage_limit) * 100
 })
 
+// 数据量柱状图（固定容器 250px，柱子高度按比例，不超出）
+const dbChartData = computed(() => {
+  if (!dbData.value) return []
+  const d = dbData.value
+  const items = [
+    { label: '植物', value: d.plants_count || 0, color: '#4A7C59' },
+    { label: '生长记录', value: d.records_count || 0, color: '#5B9BD5' },
+    { label: '用户', value: d.users_count || 0, color: '#ED7D31' }
+  ]
+  const max = Math.max(...items.map((i) => i.value), 1)
+  return items.map((i) => ({
+    ...i,
+    // 柱体最大占 60% 高度，留出顶部数字空间
+    height: Math.max(4, (i.value / max) * 60)
+  }))
+})
+
 // 工具函数
 function bytes(n) {
   if (n == null) return '—'
@@ -272,21 +289,16 @@ function statusColor(s) {
   return 'dot-err'
 }
 
-function barStyle(val, max) {
-  const h = Math.max(8, (val / Math.max(max, 1)) * 120)
-  return { height: h + 'px', background: '#4A7C59', opacity: val === 0 ? 0.25 : 1 }
-}
-
 function progressBarClass(p) {
-  if (p >= 90) return 'bg-red-500'
-  if (p >= 70) return 'bg-yellow-500'
-  return 'bg-[#4A7C59]'
+  if (p >= 90) return 'bg-danger'
+  if (p >= 70) return 'bg-warning'
+  return 'bg-primary'
 }
 
 function progressTextClass(p) {
-  if (p >= 90) return 'text-red-500'
-  if (p >= 70) return 'text-yellow-600'
-  return 'text-[#4A7C59]'
+  if (p >= 90) return 'text-danger'
+  if (p >= 70) return 'text-warning'
+  return 'text-primary'
 }
 
 // 拉取数据
@@ -335,6 +347,7 @@ function logout() {
 }
 
 onMounted(() => {
+  setPageTitle('管理员后台')
   refreshAll()
   timer = setInterval(refreshAll, 30000) // 30秒自动刷新
 })
@@ -351,8 +364,7 @@ onUnmounted(() => {
   height: 10px;
   border-radius: 50%;
 }
-.dot-ok { background: #22c55e; box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15); }
-.dot-warn { background: #eab308; box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.15); }
-.dot-err { background: #ef4444; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15); }
-.card { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.dot-ok { background: #27AE60; box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.15); }
+.dot-warn { background: #F39C12; box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.15); }
+.dot-err { background: #C0392B; box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15); }
 </style>

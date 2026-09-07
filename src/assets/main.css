@@ -13,9 +13,15 @@ html {
 }
 
 body {
-  @apply bg-white text-neutral-body font-sans;
+  @apply bg-neutral-bg text-neutral-body font-sans;
   margin: 0;
   font-variant-numeric: tabular-nums;
+}
+
+/* 全局禁止横向滚动 */
+html,
+body {
+  overflow-x: hidden;
 }
 
 /* 滚动条美化 */

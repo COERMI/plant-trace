@@ -182,6 +182,7 @@ import { useUserStore } from '../stores/userStore'
 import { supabase } from '../utils/supabase'
 import { getEventType } from '../utils/constants'
 import { formatDateTime, daysSince } from '../utils/date'
+import { setPageTitle } from '../utils/title'
 import { toast } from '../utils/toast'
 
 const router = useRouter()
@@ -192,6 +193,7 @@ const loading = ref(true)
 const allRecords = ref([])
 
 onMounted(async () => {
+  setPageTitle('数据统计')
   try {
     if (!plantStore.loaded) await plantStore.fetchPlants()
     // 拉取当前用户所有记录

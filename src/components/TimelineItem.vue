@@ -152,7 +152,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import EventTag from './EventTag.vue'
 import LazyImage from './LazyImage.vue'
 import { formatDateTime } from '../utils/date'
@@ -198,7 +198,6 @@ function onKeydown(e) {
   if (e.key === 'ArrowRight') nextImage()
 }
 
-import { onMounted } from 'vue'
 onMounted(() => {
   window.addEventListener('keydown', onKeydown)
 })

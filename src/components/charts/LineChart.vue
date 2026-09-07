@@ -1,6 +1,6 @@
 <template>
   <!-- 纯 SVG 折线图 -->
-  <div class="w-full">
+  <div class="w-full overflow-hidden" :style="{ height: height + 'px' }">
     <svg
       :viewBox="`0 0 ${W} ${H}`"
       preserveAspectRatio="none"
@@ -61,13 +61,13 @@ const props = defineProps({
 })
 
 const W = 600
-const H = 250
+const H = computed(() => props.height)
 const PAD_L = 20
 const PAD_R = 20
 const PAD_T = 16
 const PAD_B = 30
 const chartW = W - PAD_L - PAD_R
-const chartH = H - PAD_T - PAD_B
+const chartH = computed(() => props.height - PAD_T - PAD_B)
 
 const maxVal = computed(() => Math.max(...props.values, 1))
 
@@ -75,9 +75,10 @@ const points = computed(() => {
   const n = props.values.length
   if (!n) return []
   const step = n > 1 ? chartW / (n - 1) : 0
+  const h = chartH.value
   return props.values.map((v, i) => ({
     x: PAD_L + i * step,
-    y: PAD_T + chartH - (v / maxVal.value) * chartH
+    y: PAD_T + h - (v / maxVal.value) * h
   }))
 })
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="plant" class="min-h-screen bg-white pb-[80px]">
+  <div v-if="plant" class="min-h-screen bg-neutral-bg pb-[80px]">
     <!-- 顶部封面区 -->
     <div class="relative h-[200px] w-full sm:h-[280px]">
       <LazyImage
@@ -226,7 +226,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import PlantForm from '../components/PlantForm.vue'
 import RecordForm from '../components/RecordForm.vue'
@@ -238,6 +238,7 @@ import { usePlantStore } from '../stores/plantStore'
 import { useRecordStore } from '../stores/recordStore'
 import { getEventType } from '../utils/constants'
 import { formatDate, daysSince } from '../utils/date'
+import { setPageTitle } from '../utils/title'
 import { toast } from '../utils/toast'
 
 const route = useRoute()
@@ -265,6 +266,11 @@ onMounted(async () => {
   if (!plantStore.loaded) await plantStore.fetchPlants()
   await recordStore.fetchRecords(plantId)
 })
+
+// 动态设置页面标题（含植物名）
+watch(plant, (p) => {
+  if (p) setPageTitle(p.name)
+}, { immediate: true })
 
 // 标签行：品类 / 品系 / 品种
 const tagLine = computed(() => {

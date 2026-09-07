@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-white">
+  <div class="min-h-screen bg-neutral-bg">
     <!-- 顶部栏 -->
     <header class="sticky top-0 z-30 border-b border-neutral-border bg-white/95 backdrop-blur">
       <div class="mx-auto max-w-[1200px] px-base sm:px-lg">
@@ -332,6 +332,7 @@ import { useUserStore } from '../stores/userStore'
 import { useRecordStore } from '../stores/recordStore'
 import { supabase } from '../utils/supabase'
 import { toast } from '../utils/toast'
+import { setPageTitle } from '../utils/title'
 import { notifySupported, notifyPermission, requestNotifyPermission, sendNotify } from '../utils/notify'
 
 const router = useRouter()
@@ -368,6 +369,7 @@ const loadMoreRef = ref(null)
 let loadMoreObserver = null
 
 onMounted(async () => {
+  setPageTitle('我的植物')
   if (!plantStore.loaded) {
     await plantStore.fetchPlants()
   }

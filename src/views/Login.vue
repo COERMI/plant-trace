@@ -76,9 +76,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/userStore'
+import { setPageTitle } from '../utils/title'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -88,6 +89,8 @@ const email = ref('')
 const password = ref('')
 const error = ref('')
 const loading = ref(false)
+
+onMounted(() => setPageTitle(mode.value === 'login' ? '登录' : '注册'))
 
 async function handleSubmit() {
   error.value = ''

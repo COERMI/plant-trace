@@ -1,6 +1,6 @@
 <template>
-  <div class="animate-pulse space-y-3">
-    <div v-for="i in rows" :key="i" class="h-4 bg-gray-100 rounded" :style="{ width: i === rows ? '60%' : '100%' }"></div>
+  <div class="animate-pulse space-y-md">
+    <div v-for="i in rows" :key="i" class="h-4 rounded bg-neutral-bg" :style="{ width: i === rows ? '60%' : '100%' }"></div>
   </div>
 </template>
 

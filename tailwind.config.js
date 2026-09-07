@@ -35,11 +35,16 @@ export default {
         ]
       },
       fontSize: {
-        h1: ['28px', { lineHeight: '1.3', fontWeight: '700' }],
+        // 大标题 24px / 700 / 1.3
+        h1: ['24px', { lineHeight: '1.3', fontWeight: '700' }],
+        // 页面标题 20px / 600 / 1.4
         h2: ['20px', { lineHeight: '1.4', fontWeight: '600' }],
+        // 卡片标题 16px / 600 / 1.4
         h3: ['16px', { lineHeight: '1.4', fontWeight: '600' }],
-        'body-l': ['15px', { lineHeight: '1.6' }],
+        // 正文 14px / 400 / 1.6
+        'body-l': ['14px', { lineHeight: '1.6' }],
         body: ['14px', { lineHeight: '1.6' }],
+        // 辅助文字 12px / 400 / 1.5
         caption: ['12px', { lineHeight: '1.5' }],
         micro: ['11px', { lineHeight: '1.4' }]
       },
