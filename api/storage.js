@@ -1,5 +1,5 @@
 // api/storage.js — 存储监控
-const { ok, fail, supabaseRpc } = require('./_shared.js')
+const { ok, fail, supabaseRpc } = require('../lib/_shared.cjs')
 
 const STORAGE_LIMIT = 1073741824 // 1GB 免费版上限
 

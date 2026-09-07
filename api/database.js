@@ -1,5 +1,5 @@
 // api/database.js — 数据库监控
-const { ok, fail, supabaseRpc, supabaseRest, SUPABASE_KEY } = require('./_shared.js')
+const { ok, fail, supabaseRpc, supabaseRest, SUPABASE_KEY } = require('../lib/_shared.cjs')
 
 module.exports = async function handler(req) {
   try {

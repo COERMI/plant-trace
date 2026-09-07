@@ -1,5 +1,5 @@
 // api/users.js — 用户管理
-const { ok, fail, supabaseRpc } = require('./_shared.js')
+const { ok, fail, supabaseRpc } = require('../lib/_shared.cjs')
 
 module.exports = async function handler(req) {
   try {

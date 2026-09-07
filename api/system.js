@@ -1,5 +1,5 @@
 // api/system.js — 系统状态总览
-const { ok, fail, supabaseRest } = require('./_shared.js')
+const { ok, fail, supabaseRest } = require('../lib/_shared.cjs')
 
 module.exports = async function handler(req) {
   try {
