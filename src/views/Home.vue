@@ -1,12 +1,12 @@
 <template>
   <div class="min-h-screen bg-neutral-bg">
-    <!-- 顶部栏 -->
-    <header class="sticky top-0 z-30 border-b border-neutral-border bg-white/95 backdrop-blur">
+    <!-- 顶部栏（苔绿渐变） -->
+    <header class="sticky top-0 z-30 bg-gradient-to-r from-primary to-primary-hover shadow-md">
       <div class="mx-auto max-w-[1200px] px-base sm:px-lg">
         <div class="flex items-center justify-between py-base">
           <!-- 品牌 -->
           <div class="flex items-center gap-sm">
-            <div class="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
+            <div class="flex h-8 w-8 items-center justify-center rounded-md bg-white/20">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M12 21c-4.5-1-7-4-7-8 0-3 2-5 5-5 1 0 1.5.5 2 1 0-1 .5-2 1.5-2.5C15 6 17 7 17 10c0 3.5-2.5 6-5 6-1.5 0-2.5-.5-3-1 .5 4-1.5 5-1.5 5"
@@ -17,18 +17,18 @@
                 />
               </svg>
             </div>
-            <span class="text-h3 text-neutral-title">植迹</span>
+            <span class="text-h3 text-white">植迹</span>
             <!-- 电脑端导航 -->
             <div class="ml-lg hidden items-center gap-xs sm:flex">
               <router-link
                 to="/"
-                class="rounded-sm px-md py-xs text-body font-semibold text-primary"
+                class="rounded-sm px-md py-xs text-body font-semibold text-white"
               >
                 首页
               </router-link>
               <router-link
                 to="/stats"
-                class="rounded-sm px-md py-xs text-body font-semibold text-neutral-secondary transition-colors hover:bg-neutral-bg"
+                class="rounded-sm px-md py-xs text-body font-semibold text-white/70 transition-colors hover:bg-white/10 hover:text-white"
               >
                 统计
               </router-link>
@@ -38,7 +38,7 @@
           <!-- 提醒 + 管理 + 退出登录 -->
           <div class="flex items-center gap-xs">
             <button
-              class="relative flex h-9 w-9 items-center justify-center rounded-sm text-neutral-secondary transition-colors hover:bg-neutral-bg"
+              class="relative flex h-9 w-9 items-center justify-center rounded-sm text-white/90 transition-colors hover:bg-white/10"
               aria-label="浇水提醒"
               @click="handleRemind"
             >
@@ -48,12 +48,12 @@
               <!-- 有待提醒的红点 -->
               <span
                 v-if="duePlants.length"
-                class="absolute right-xs top-xs h-2 w-2 rounded-full bg-red-500"
+                class="absolute right-xs top-xs h-2 w-2 rounded-full bg-white"
               ></span>
             </button>
             <button
               class="flex h-9 items-center gap-xs rounded-sm px-md text-body font-semibold transition-colors"
-              :class="manageMode ? 'bg-primary text-white' : 'text-neutral-secondary hover:bg-neutral-bg'"
+              :class="manageMode ? 'bg-white text-primary' : 'text-white/90 hover:bg-white/10'"
               @click="toggleManageMode"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -62,7 +62,7 @@
               {{ manageMode ? '完成' : '管理' }}
             </button>
             <button
-              class="flex h-9 items-center gap-xs rounded-sm px-md text-body font-semibold text-neutral-secondary transition-colors hover:bg-neutral-bg"
+              class="flex h-9 items-center gap-xs rounded-sm px-md text-body font-semibold text-white/90 transition-colors hover:bg-white/10"
               @click="handleSignOut"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -79,7 +79,7 @@
           </div>
         </div>
 
-        <!-- 搜索栏 -->
+        <!-- 搜索栏（白底） -->
         <div class="group relative pb-base">
           <span
             class="pointer-events-none absolute left-md top-1/2 flex -translate-y-1/2 items-center justify-center text-neutral-placeholder transition-colors group-focus-within:text-primary"
@@ -93,7 +93,7 @@
             v-model="searchQuery"
             type="text"
             placeholder="搜索植物名称、品种..."
-            class="h-11 w-full rounded-md border border-transparent bg-neutral-bg pl-10 pr-10 text-body text-neutral-title placeholder:text-neutral-placeholder transition-all duration-200 focus:border-primary focus:bg-white focus:shadow-sm focus:outline-none"
+            class="h-11 w-full rounded-md border border-transparent bg-white pl-10 pr-10 text-body text-neutral-title placeholder:text-neutral-placeholder transition-all duration-200 focus:border-white focus:shadow-lg focus:outline-none"
           />
           <!-- 清空按钮 -->
           <button
@@ -113,7 +113,7 @@
         <div class="no-scrollbar -mx-base flex gap-sm overflow-x-auto px-base pb-base">
           <button
             class="h-7 shrink-0 whitespace-nowrap rounded-sm px-md text-caption font-semibold transition-colors"
-            :class="activeCategory === '' ? 'bg-primary text-white' : 'bg-neutral-bg text-neutral-body'"
+            :class="activeCategory === '' ? 'bg-white text-primary' : 'bg-white/20 text-white'"
             @click="activeCategory = ''"
           >
             全部
@@ -122,7 +122,7 @@
             v-for="cat in plantStore.categories"
             :key="cat"
             class="h-7 shrink-0 whitespace-nowrap rounded-sm px-md text-caption font-semibold transition-colors"
-            :class="activeCategory === cat ? 'bg-primary text-white' : 'bg-neutral-bg text-neutral-body'"
+            :class="activeCategory === cat ? 'bg-white text-primary' : 'bg-white/20 text-white'"
             @click="activeCategory = cat"
           >
             {{ cat }}
@@ -191,7 +191,7 @@
     <!-- 悬浮新增按钮（safe-area 避让手势条，管理模式下隐藏） -->
     <button
       v-if="!manageMode"
-      class="fixed bottom-[calc(72px+env(safe-area-inset-bottom))] right-base z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-105 hover:shadow-xl active:scale-95 sm:right-lg"
+      class="fixed bottom-[calc(72px+env(safe-area-inset-bottom))] right-base z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-hover text-white shadow-[0_8px_24px_rgba(74,124,89,0.4)] transition-all duration-200 hover:scale-110 hover:shadow-[0_12px_32px_rgba(74,124,89,0.5)] active:scale-95 sm:right-lg"
       aria-label="新增植物"
       @click="showPlantForm = true"
     >
@@ -235,10 +235,10 @@
       class="fixed bottom-0 left-0 right-0 z-40 border-t border-neutral-border bg-white/95 backdrop-blur sm:hidden"
       style="padding-bottom: env(safe-area-inset-bottom)"
     >
-      <div class="flex h-14 items-center">
+      <div class="flex h-14 items-center gap-sm px-base">
         <router-link
           to="/"
-          class="flex flex-1 flex-col items-center justify-center gap-[2px] text-primary"
+          class="flex h-11 flex-1 flex-col items-center justify-center gap-[2px] rounded-md bg-primary text-white shadow-sm transition-colors"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
@@ -248,7 +248,7 @@
         </router-link>
         <router-link
           to="/stats"
-          class="flex flex-1 flex-col items-center justify-center gap-[2px] text-neutral-secondary"
+          class="flex h-11 flex-1 flex-col items-center justify-center gap-[2px] rounded-md text-neutral-secondary transition-colors hover:bg-neutral-bg"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             <line x1="18" x2="18" y1="20" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />

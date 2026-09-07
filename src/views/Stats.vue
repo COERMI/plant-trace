@@ -1,21 +1,21 @@
 <template>
   <div class="min-h-screen bg-neutral-bg">
-    <!-- 顶部栏 -->
-    <header class="sticky top-0 z-30 border-b border-neutral-border bg-white/95 backdrop-blur">
+    <!-- 顶部栏（苔绿渐变） -->
+    <header class="sticky top-0 z-30 bg-gradient-to-r from-primary to-primary-hover shadow-md">
       <div class="mx-auto flex max-w-[1200px] items-center justify-between px-base py-base sm:px-lg">
         <div class="flex items-center gap-sm">
-          <div class="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
+          <div class="flex h-8 w-8 items-center justify-center rounded-md bg-white/20">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <line x1="18" x2="18" y1="20" y2="10" stroke="white" stroke-width="1.8" stroke-linecap="round" />
               <line x1="12" x2="12" y1="20" y2="4" stroke="white" stroke-width="1.8" stroke-linecap="round" />
               <line x1="6" x2="6" y1="20" y2="14" stroke="white" stroke-width="1.8" stroke-linecap="round" />
             </svg>
           </div>
-          <h1 class="text-h3 text-neutral-title">数据统计</h1>
+          <h1 class="text-h3 text-white">数据统计</h1>
         </div>
         <!-- 导出数据 -->
         <button
-          class="flex h-9 items-center gap-xs rounded-sm px-md text-body font-semibold text-neutral-secondary transition-colors hover:bg-neutral-bg"
+          class="flex h-9 items-center gap-xs rounded-sm px-md text-body font-semibold text-white/90 transition-colors hover:bg-white/10"
           @click="exportData"
         >
           <Icon name="download" :size="16" />
@@ -47,33 +47,33 @@
         <template v-else>
           <!-- 顶部 4 个数据卡片（2x2） -->
           <div class="grid grid-cols-2 gap-md">
-            <div class="rounded-lg bg-white p-base shadow-md">
-              <div class="flex items-center gap-sm text-neutral-secondary">
+            <div class="rounded-lg bg-white p-base shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <div class="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-primary">
                 <Icon name="leaf" :size="18" />
-                <span class="text-caption">总植物数</span>
               </div>
-              <p class="mt-sm text-h2 text-neutral-title">{{ plantStore.plants.length }}</p>
+              <p class="mt-md text-h2 text-neutral-title">{{ plantStore.plants.length }}</p>
+              <p class="mt-xs text-caption text-neutral-secondary">总植物数</p>
             </div>
-            <div class="rounded-lg bg-white p-base shadow-md">
-              <div class="flex items-center gap-sm text-neutral-secondary">
+            <div class="rounded-lg bg-white p-base shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <div class="flex h-9 w-9 items-center justify-center rounded-md bg-[#E8F2F9] text-[#5B9BD5]">
                 <Icon name="file-text" :size="18" />
-                <span class="text-caption">总记录数</span>
               </div>
-              <p class="mt-sm text-h2 text-neutral-title">{{ allRecords.length }}</p>
+              <p class="mt-md text-h2 text-neutral-title">{{ allRecords.length }}</p>
+              <p class="mt-xs text-caption text-neutral-secondary">总记录数</p>
             </div>
-            <div class="rounded-lg bg-white p-base shadow-md">
-              <div class="flex items-center gap-sm text-neutral-secondary">
+            <div class="rounded-lg bg-white p-base shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <div class="flex h-9 w-9 items-center justify-center rounded-md bg-[#FDF0E6] text-[#ED7D31]">
                 <Icon name="calendar" :size="18" />
-                <span class="text-caption">总入手天数</span>
               </div>
-              <p class="mt-sm text-h2 text-neutral-title">{{ totalDays }}</p>
+              <p class="mt-md text-h2 text-neutral-title">{{ totalDays }}</p>
+              <p class="mt-xs text-caption text-neutral-secondary">总入手天数</p>
             </div>
-            <div class="rounded-lg bg-white p-base shadow-md">
-              <div class="flex items-center gap-sm text-neutral-secondary">
+            <div class="rounded-lg bg-white p-base shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <div class="flex h-9 w-9 items-center justify-center rounded-md bg-[#FFF8E6] text-[#E6A800]">
                 <Icon name="flower-2" :size="18" />
-                <span class="text-caption">今年开花次数</span>
               </div>
-              <p class="mt-sm text-h2 text-neutral-title">{{ thisYearBloom }}</p>
+              <p class="mt-md text-h2 text-neutral-title">{{ thisYearBloom }}</p>
+              <p class="mt-xs text-caption text-neutral-secondary">今年开花次数</p>
             </div>
           </div>
 
@@ -143,10 +143,10 @@
       class="fixed bottom-0 left-0 right-0 z-40 border-t border-neutral-border bg-white/95 backdrop-blur sm:hidden"
       style="padding-bottom: env(safe-area-inset-bottom)"
     >
-      <div class="flex h-14 items-center">
+      <div class="flex h-14 items-center gap-sm px-base">
         <router-link
           to="/"
-          class="flex flex-1 flex-col items-center justify-center gap-[2px] text-neutral-secondary"
+          class="flex h-11 flex-1 flex-col items-center justify-center gap-[2px] rounded-md text-neutral-secondary transition-colors hover:bg-neutral-bg"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
@@ -156,7 +156,7 @@
         </router-link>
         <router-link
           to="/stats"
-          class="flex flex-1 flex-col items-center justify-center gap-[2px] text-primary"
+          class="flex h-11 flex-1 flex-col items-center justify-center gap-[2px] rounded-md bg-primary text-white shadow-sm transition-colors"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             <line x1="18" x2="18" y1="20" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />

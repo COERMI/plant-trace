@@ -2,7 +2,7 @@
   <div class="flex min-h-screen flex-col items-center justify-center bg-neutral-bg px-lg">
     <!-- 品牌区 -->
     <div class="mb-xl flex flex-col items-center text-center">
-      <div class="mb-base flex h-20 w-20 items-center justify-center rounded-2xl bg-primary shadow-lg">
+      <div class="mb-base flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary-hover shadow-[0_8px_24px_rgba(74,124,89,0.35)]">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
           <path
             d="M12 21c-4.5-1-7-4-7-8 0-3 2-5 5-5 1 0 1.5.5 2 1 0-1 .5-2 1.5-2.5C15 6 17 7 17 10c0 3.5-2.5 6-5 6-1.5 0-2.5-.5-3-1 .5 4-1.5 5-1.5 5"

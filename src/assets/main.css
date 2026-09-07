@@ -53,21 +53,25 @@ body {
   white-space: nowrap;
 }
 
-/* 页面转场 */
+/* 页面转场（淡入 + 轻微滑动） */
 .page-enter-active,
 .page-leave-active {
-  transition: opacity 0.25s ease-out;
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
 }
-.page-enter-from,
+.page-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
 .page-leave-to {
   opacity: 0;
+  transform: translateX(-20px);
 }
 
 /* 时间线卡片逐条淡入 */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -75,7 +79,7 @@ body {
   }
 }
 .fade-in-up {
-  animation: fadeInUp 0.25s ease-out both;
+  animation: fadeInUp 0.4s ease-out both;
 }
 
 /* 弹窗滑入 */

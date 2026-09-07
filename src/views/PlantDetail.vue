@@ -85,12 +85,12 @@
           <div
             v-for="s in stats"
             :key="s.key"
-            class="flex shrink-0 flex-col items-center rounded-md bg-white px-lg py-md shadow-md"
+            class="flex shrink-0 flex-col items-center rounded-lg bg-white px-lg py-md shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
           >
-            <span class="flex items-center gap-xs text-h3" :style="{ color: s.text }">
-              <Icon :name="s.icon" :size="20" :color="s.text" />
-              {{ s.count }}
+            <span class="flex h-9 w-9 items-center justify-center rounded-full" :style="{ backgroundColor: s.bg }">
+              <Icon :name="s.icon" :size="18" :color="s.text" />
             </span>
+            <span class="mt-xs text-h3" :style="{ color: s.text }">{{ s.count }}</span>
             <span class="mt-xs text-caption text-neutral-secondary">{{ s.label }}</span>
           </div>
         </div>
@@ -173,7 +173,7 @@
 
     <!-- 悬浮新增记录按钮（safe-area 避让手势条） -->
     <button
-      class="fixed bottom-[calc(24px+env(safe-area-inset-bottom))] right-base z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-105 hover:shadow-xl active:scale-95 sm:right-lg"
+      class="fixed bottom-[calc(24px+env(safe-area-inset-bottom))] right-base z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-hover text-white shadow-[0_8px_24px_rgba(74,124,89,0.4)] transition-all duration-200 hover:scale-110 hover:shadow-[0_12px_32px_rgba(74,124,89,0.5)] active:scale-95 sm:right-lg"
       aria-label="新增记录"
       @click="showAddRecord = true"
     >

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="group fade-in-up relative block overflow-hidden rounded-lg bg-white shadow-md transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg"
+    class="group fade-in-up relative block overflow-hidden rounded-lg bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] transition-all duration-200 ease-out hover:-translate-y-1.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)]"
     :style="{ animationDelay: `${Math.min(index * 40, 400)}ms` }"
   >
     <router-link
@@ -14,7 +14,7 @@
           :src="plant.cover_image"
           :alt="plant.name"
           wrapper-class="absolute inset-0 h-full w-full"
-          img-class="h-full w-full object-cover object-center transition-transform duration-200 group-hover:scale-105"
+          img-class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-110"
         />
         <!-- 默认植物图标 -->
         <div v-else class="flex h-full w-full items-center justify-center">
