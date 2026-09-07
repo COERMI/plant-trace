@@ -1,7 +1,7 @@
 // api/users.js — 用户管理
-import { ok, fail, supabaseRpc } from './lib/_shared.cjs'
+const { ok, fail, supabaseRpc } = require('./lib/_shared.cjs')
 
-export default async function handler(req) {
+module.exports = async function handler(req) {
   try {
     let total_users = 0
     let active_today = 0

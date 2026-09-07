@@ -1,7 +1,7 @@
 // api/auth.js — 管理员登录校验（密码只在服务端，前端拿不到）
-import { json } from './lib/_shared.cjs'
+const { json } = require('./lib/_shared.cjs')
 
-export default async function handler(req) {
+module.exports = async function handler(req) {
   try {
     if (req.method !== 'POST') {
       return json(405, { error: 'Method not allowed' })

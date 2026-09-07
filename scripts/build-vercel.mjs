@@ -46,6 +46,9 @@ for (const file of apiFiles) {
   // 复制函数文件
   copyFileSync(join(apiDir, file), join(funcDir, 'index.js'))
 
+  // 生成 package.json（声明 CommonJS，避免被根目录 type:module 干扰）
+  writeFileSync(join(funcDir, 'package.json'), JSON.stringify({ type: 'commonjs' }, null, 2))
+
   // 复制共享代码
   const libDir = join(root, 'lib')
   if (existsSync(libDir)) {

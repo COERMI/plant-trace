@@ -1,7 +1,7 @@
 // api/database.js — 数据库监控
-import { ok, fail, supabaseRpc, supabaseRest, SUPABASE_KEY } from './lib/_shared.cjs'
+const { ok, fail, supabaseRpc, supabaseRest, SUPABASE_KEY } = require('./lib/_shared.cjs')
 
-export default async function handler(req) {
+module.exports = async function handler(req) {
   try {
     let plants_count = 0
     let records_count = 0
