@@ -143,5 +143,14 @@ end;
 $$;
 
 -- ============================================================
+-- 授权：允许 anon / authenticated 角色调用这些 RPC 函数
+-- （函数体用 SECURITY DEFINER 以拥有者权限执行，但调用权需显式授予）
+-- ============================================================
+grant execute on function public.admin_database_stats() to anon, authenticated;
+grant execute on function public.admin_users_stats() to anon, authenticated;
+grant execute on function public.admin_recent_activities(int) to anon, authenticated;
+grant execute on function public.admin_storage_stats() to anon, authenticated;
+
+-- ============================================================
 -- 完成
 -- ============================================================
