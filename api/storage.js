@@ -3,7 +3,8 @@ import { ok, fail, supabaseRpc } from './_shared.js'
 
 const STORAGE_LIMIT = 1073741824 // 1GB 免费版上限
 
-export default async function handler(req) {
+export default {
+  async fetch(req) {
   try {
     let bucket_name = 'plant-images'
     let files_count = 0
@@ -32,4 +33,5 @@ export default async function handler(req) {
   } catch (e) {
     return fail(e)
   }
+}
 }

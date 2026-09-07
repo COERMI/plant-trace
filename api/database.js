@@ -1,7 +1,8 @@
 // api/database.js — 数据库监控
 import { ok, fail, supabaseRpc, supabaseRest, SUPABASE_KEY } from './_shared.js'
 
-export default async function handler(req) {
+export default {
+  async fetch(req) {
   try {
     let plants_count = 0
     let records_count = 0
@@ -47,4 +48,5 @@ export default async function handler(req) {
   } catch (e) {
     return fail(e)
   }
+}
 }

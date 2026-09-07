@@ -1,7 +1,8 @@
 // api/logs.js — 系统日志
 import { ok, fail, supabaseRpc } from './_shared.js'
 
-export default async function handler(req) {
+export default {
+  async fetch(req) {
   try {
     const logSource = 'builtin'
     const logMessage = '日志功能需要配置 Vercel Log Drain（推送式日志，需自建接收端点）'
@@ -26,4 +27,5 @@ export default async function handler(req) {
   } catch (e) {
     return fail(e)
   }
+}
 }

@@ -1,7 +1,8 @@
 // api/system.js — 系统状态总览
 import { ok, fail, supabaseRest } from './_shared.js'
 
-export default async function handler(req) {
+export default {
+  async fetch(req) {
   try {
     let vercel_status = 'unknown'
     let last_deploy = null
@@ -70,4 +71,5 @@ export default async function handler(req) {
   } catch (e) {
     return fail(e)
   }
+}
 }
