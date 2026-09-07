@@ -170,16 +170,29 @@
         </button>
       </div>
     </div>
+
+    <!-- 删除确认弹窗 -->
+    <ConfirmDialog
+      v-if="showDeleteConfirm"
+      title="删除记录"
+      message="确定要删除这条生长记录吗？此操作不可恢复。"
+      confirm-text="删除"
+      danger
+      @confirm="submitDelete"
+      @cancel="showDeleteConfirm = false"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import Icon from './Icon.vue'
+import ConfirmDialog from './ConfirmDialog.vue'
 import { EVENT_TYPES, EVENT_TYPE_KEYS } from '../utils/constants'
 import { nowLocalInput } from '../utils/date'
 import { isImageTooLarge } from '../utils/image'
 import { useRecordStore } from '../stores/recordStore'
+import { toast } from '../utils/toast'
 
 const props = defineProps({
   plantId: { type: String, required: true },
@@ -198,6 +211,7 @@ const existingImages = ref([])
 const submitting = ref(false)
 const uploadProgress = ref(0) // 上传/压缩进度 0-1
 const isUploading = ref(false)
+const showDeleteConfirm = ref(false)
 
 const form = reactive({
   event_type: 'water',
@@ -231,8 +245,7 @@ function onFileChange(e) {
   // 检查单张是否超 5MB
   const oversized = files.filter((f) => isImageTooLarge(f))
   if (oversized.length) {
-    alert('有 ' + oversized.length + ' 张照片超过 5MB，请选择更小的图片')
-    // 跳过超限的，只保留未超限的
+    toast.error('有 ' + oversized.length + ' 张照片超过 5MB，已跳过')
   }
 
   const valid = files.filter((f) => !isImageTooLarge(f))
@@ -276,8 +289,9 @@ async function submit() {
     }
     emit('saved')
     emit('close')
+    toast.success(isEdit.value ? '已更新' : '已保存')
   } catch (e) {
-    alert('保存失败：' + (e.message || '未知错误'))
+    toast.error('保存失败：' + (e.message || '未知错误'))
   } finally {
     submitting.value = false
     isUploading.value = false
@@ -285,19 +299,19 @@ async function submit() {
 }
 
 function requestDelete() {
-  if (confirm('确定要删除这条记录吗？此操作不可恢复。')) {
-    submitDelete()
-  }
+  showDeleteConfirm.value = true
 }
 
 async function submitDelete() {
+  showDeleteConfirm.value = false
   submitting.value = true
   try {
     await recordStore.deleteRecord(props.record.id, props.plantId)
     emit('saved')
     emit('close')
+    toast.success('已删除')
   } catch (e) {
-    alert('删除失败：' + (e.message || '未知错误'))
+    toast.error('删除失败：' + (e.message || '未知错误'))
   } finally {
     submitting.value = false
   }

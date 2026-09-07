@@ -183,16 +183,29 @@
         </button>
       </div>
     </div>
+
+    <!-- 删除确认弹窗 -->
+    <ConfirmDialog
+      v-if="showDeleteConfirm"
+      title="删除植物"
+      message="确定要删除这株植物吗？其所有生长记录也会一并删除，此操作不可恢复。"
+      confirm-text="删除"
+      danger
+      @confirm="submitDelete"
+      @cancel="showDeleteConfirm = false"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import AutocompleteInput from './AutocompleteInput.vue'
+import ConfirmDialog from './ConfirmDialog.vue'
 import { PLANT_STATUS } from '../utils/constants'
 import { todayStr } from '../utils/date'
 import { isImageTooLarge } from '../utils/image'
 import { usePlantStore } from '../stores/plantStore'
+import { toast } from '../utils/toast'
 
 const props = defineProps({
   // 编辑时传入的植物对象，新增时为 null
@@ -210,6 +223,7 @@ const previewUrl = ref('')
 const submitting = ref(false)
 const uploadProgress = ref(0)
 const isUploading = ref(false)
+const showDeleteConfirm = ref(false)
 
 const form = reactive({
   name: '',
@@ -259,7 +273,7 @@ function onFileChange(e) {
   const file = e.target.files[0]
   if (!file) return
   if (isImageTooLarge(file)) {
-    alert('图片超过 5MB，请选择更小的图片')
+    toast.error('图片超过 5MB，请选择更小的图片')
     if (fileInput.value) fileInput.value.value = ''
     return
   }
@@ -291,8 +305,9 @@ async function submit() {
     }
     emit('saved')
     emit('close')
+    toast.success(isEdit.value ? '已更新' : '已保存')
   } catch (e) {
-    alert('保存失败：' + (e.message || '未知错误'))
+    toast.error('保存失败：' + (e.message || '未知错误'))
   } finally {
     submitting.value = false
     isUploading.value = false
@@ -300,19 +315,19 @@ async function submit() {
 }
 
 function requestDelete() {
-  if (confirm('确定要删除这株植物吗？其所有生长记录也会一并删除，此操作不可恢复。')) {
-    submitDelete()
-  }
+  showDeleteConfirm.value = true
 }
 
 async function submitDelete() {
+  showDeleteConfirm.value = false
   submitting.value = true
   try {
     await plantStore.deletePlant(props.plant.id)
     emit('saved')
     emit('close')
+    toast.success('已删除')
   } catch (e) {
-    alert('删除失败：' + (e.message || '未知错误'))
+    toast.error('删除失败：' + (e.message || '未知错误'))
   } finally {
     submitting.value = false
   }

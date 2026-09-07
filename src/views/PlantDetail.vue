@@ -166,6 +166,17 @@
       @close="editingRecord = null"
       @saved="onRecordSaved"
     />
+
+    <!-- 删除记录确认弹窗 -->
+    <ConfirmDialog
+      v-if="pendingDeleteRecord"
+      title="删除记录"
+      message="确定要删除这条生长记录吗？此操作不可恢复。"
+      confirm-text="删除"
+      danger
+      @confirm="confirmDeleteRecord"
+      @cancel="pendingDeleteRecord = null"
+    />
   </div>
 
   <!-- 加载中 -->
@@ -182,10 +193,12 @@ import RecordForm from '../components/RecordForm.vue'
 import TimelineItem from '../components/TimelineItem.vue'
 import LazyImage from '../components/LazyImage.vue'
 import Icon from '../components/Icon.vue'
+import ConfirmDialog from '../components/ConfirmDialog.vue'
 import { usePlantStore } from '../stores/plantStore'
 import { useRecordStore } from '../stores/recordStore'
 import { getEventType } from '../utils/constants'
 import { formatDate, daysSince } from '../utils/date'
+import { toast } from '../utils/toast'
 
 const route = useRoute()
 const router = useRouter()
@@ -196,6 +209,7 @@ const plantId = route.params.id
 const showEditPlant = ref(false)
 const showAddRecord = ref(false)
 const editingRecord = ref(null)
+const pendingDeleteRecord = ref(null)
 
 const plant = computed(() => plantStore.plants.find((p) => p.id === plantId) || null)
 const records = computed(() => recordStore.recordsByPlant[plantId] || [])
@@ -243,6 +257,7 @@ async function onPlantSaved() {
 
 async function onRecordSaved() {
   await recordStore.fetchRecords(plantId)
+  toast.success('已保存')
 }
 
 function openEditRecord(record) {
@@ -250,16 +265,18 @@ function openEditRecord(record) {
 }
 
 function requestDeleteRecord(record) {
-  if (confirm('确定要删除这条记录吗？此操作不可恢复。')) {
-    deleteRecord(record)
-  }
+  pendingDeleteRecord.value = record
 }
 
-async function deleteRecord(record) {
+async function confirmDeleteRecord() {
+  const record = pendingDeleteRecord.value
+  pendingDeleteRecord.value = null
+  if (!record) return
   try {
     await recordStore.deleteRecord(record.id, plantId)
+    toast.success('已删除')
   } catch (e) {
-    alert('删除失败：' + (e.message || '未知错误'))
+    toast.error('删除失败：' + (e.message || '未知错误'))
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <router-link
     :to="`/plant/${plant.id}`"
-    class="group block overflow-hidden rounded-lg bg-white shadow-md transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]"
+    class="group relative block overflow-hidden rounded-lg bg-white shadow-md transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]"
   >
     <!-- 封面图 4:3 -->
     <div class="relative aspect-[4/3] w-full overflow-hidden bg-neutral-bg">
@@ -24,6 +24,19 @@
           />
         </svg>
       </div>
+
+      <!-- 删除按钮（悬浮于封面右上角） -->
+      <button
+        type="button"
+        class="tap-target absolute right-xs top-xs z-10 flex items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition-opacity hover:bg-red-500/80 group-hover:opacity-100 group-focus-within:opacity-100"
+        :class="isTouch ? 'opacity-100' : ''"
+        aria-label="删除植物"
+        @click.prevent.stop="$emit('delete', plant)"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6h14z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
     </div>
 
     <!-- 信息区 -->
@@ -47,4 +60,9 @@ defineProps({
     required: true
   }
 })
+
+defineEmits(['delete'])
+
+// 判断是否触摸设备（触摸设备始终显示删除按钮，避免 hover 不可用）
+const isTouch = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
 </script>

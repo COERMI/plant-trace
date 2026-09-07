@@ -82,9 +82,9 @@
 
     <!-- 主体 -->
     <main class="mx-auto max-w-[1200px] px-base pb-[80px] sm:px-lg">
-      <!-- 加载中 -->
-      <div v-if="plantStore.loading" class="flex justify-center py-xxl">
-        <div class="h-8 w-8 animate-spin rounded-full border-2 border-neutral-border border-t-primary"></div>
+      <!-- 加载中（骨架屏） -->
+      <div v-if="plantStore.loading" class="grid grid-cols-2 gap-md sm:grid-cols-3 sm:gap-base lg:grid-cols-4">
+        <PlantCardSkeleton v-for="n in 8" :key="n" />
       </div>
 
       <!-- 空状态 -->
@@ -114,6 +114,7 @@
           v-for="plant in visiblePlants"
           :key="plant.id"
           :plant="plant"
+          @delete="requestDeletePlant(plant)"
         />
       </div>
 
@@ -142,6 +143,17 @@
 
     <!-- 新增植物面板 -->
     <PlantForm v-if="showPlantForm" @close="showPlantForm = false" @saved="onSaved" />
+
+    <!-- 删除确认弹窗 -->
+    <ConfirmDialog
+      v-if="pendingDelete"
+      title="删除植物"
+      :message="`确定要删除「${pendingDelete.name}」吗？\n其所有生长记录也会一并删除，此操作不可恢复。`"
+      confirm-text="删除"
+      danger
+      @confirm="confirmDeletePlant"
+      @cancel="pendingDelete = null"
+    />
   </div>
 </template>
 
@@ -150,8 +162,11 @@ import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import PlantCard from '../components/PlantCard.vue'
 import PlantForm from '../components/PlantForm.vue'
+import PlantCardSkeleton from '../components/PlantCardSkeleton.vue'
+import ConfirmDialog from '../components/ConfirmDialog.vue'
 import { usePlantStore } from '../stores/plantStore'
 import { useUserStore } from '../stores/userStore'
+import { toast } from '../utils/toast'
 
 const router = useRouter()
 const plantStore = usePlantStore()
@@ -160,6 +175,7 @@ const userStore = useUserStore()
 const searchQuery = ref('')
 const activeCategory = ref('')
 const showPlantForm = ref(false)
+const pendingDelete = ref(null)
 
 // 分页：一次最多加载 20 张卡片
 const PAGE_SIZE = 20
@@ -224,6 +240,23 @@ function setupLoadMore() {
 
 function onSaved() {
   // 保存后无需额外操作，store 已更新
+  toast.success('已保存')
+}
+
+function requestDeletePlant(plant) {
+  pendingDelete.value = plant
+}
+
+async function confirmDeletePlant() {
+  const plant = pendingDelete.value
+  pendingDelete.value = null
+  if (!plant) return
+  try {
+    await plantStore.deletePlant(plant.id)
+    toast.success('已删除')
+  } catch (e) {
+    toast.error('删除失败：' + (e.message || '未知错误'))
+  }
 }
 
 async function handleSignOut() {

@@ -4,12 +4,15 @@
       <component :is="Component" />
     </transition>
   </router-view>
+  <!-- 全局 Toast 提示 -->
+  <Toast />
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
 import { useUserStore } from './stores/userStore'
 import { useRouter, useRoute } from 'vue-router'
+import Toast from './components/Toast.vue'
 
 const userStore = useUserStore()
 const router = useRouter()
