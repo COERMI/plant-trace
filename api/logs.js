@@ -1,5 +1,5 @@
 // api/logs.js — 系统日志
-import { ok, fail, supabaseRpc } from './lib/_shared.cjs'
+import { ok, fail, supabaseRpc } from './_shared.js'
 
 export default async function handler(req) {
   try {

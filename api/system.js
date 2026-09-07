@@ -1,5 +1,5 @@
 // api/system.js — 系统状态总览
-import { ok, fail, supabaseRest } from './lib/_shared.cjs'
+import { ok, fail, supabaseRest } from './_shared.js'
 
 export default async function handler(req) {
   try {

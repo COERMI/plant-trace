@@ -1,13 +1,14 @@
-// api/_shared.js — 服务端共享工具（CommonJS，仅供 api/*.js 使用）
+// api/_shared.js — 服务端共享工具（ESM，仅供 api/*.js 使用）
+// 文件名以 _ 开头，Vercel 会忽略它（不当作 Serverless Function 入口）
 // 密钥从 process.env 读取，绝不暴露给浏览器
 
-const SUPABASE_URL =
+export const SUPABASE_URL =
   process.env.SUPABASE_URL ||
   process.env.VITE_SUPABASE_URL ||
   'https://lnlryoqmurfgxhjamndy.supabase.co'
 
 // 优先 service_role（绕过 RLS），否则回退 anon key（配合 RPC 统计函数）
-const SUPABASE_KEY =
+export const SUPABASE_KEY =
   process.env.SUPABASE_SERVICE_ROLE_KEY ||
   process.env.VITE_SUPABASE_ANON_KEY ||
   ''
@@ -18,7 +19,7 @@ if (!SUPABASE_KEY) {
 }
 
 // 极简 fetch 版 Supabase REST 调用
-async function supabaseRest(path, opts = {}) {
+export async function supabaseRest(path, opts = {}) {
   const url = `${SUPABASE_URL}/rest/v1/${path}`
   const res = await fetch(url, {
     method: opts.method || 'GET',
@@ -38,7 +39,7 @@ async function supabaseRest(path, opts = {}) {
 }
 
 // 调用 PostgREST RPC（绕过 RLS 的统计函数）
-async function supabaseRpc(fnName, args = {}) {
+export async function supabaseRpc(fnName, args = {}) {
   const url = `${SUPABASE_URL}/rest/v1/rpc/${fnName}`
   const res = await fetch(url, {
     method: 'POST',
@@ -56,7 +57,7 @@ async function supabaseRpc(fnName, args = {}) {
   return res.json()
 }
 
-function json(status, data) {
+export function json(status, data) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
@@ -66,12 +67,10 @@ function json(status, data) {
   })
 }
 
-function ok(data) {
+export function ok(data) {
   return json(200, data)
 }
 
-function fail(err) {
+export function fail(err) {
   return json(200, { error: err && err.message ? err.message : String(err) })
 }
-
-module.exports = { SUPABASE_URL, SUPABASE_KEY, supabaseRest, supabaseRpc, json, ok, fail }

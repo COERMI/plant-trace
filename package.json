@@ -7,7 +7,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:vercel": "node scripts/build-vercel.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

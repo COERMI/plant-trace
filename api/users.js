@@ -1,5 +1,5 @@
 // api/users.js — 用户管理
-import { ok, fail, supabaseRpc } from './lib/_shared.cjs'
+import { ok, fail, supabaseRpc } from './_shared.js'
 
 export default async function handler(req) {
   try {
